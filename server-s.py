@@ -10,7 +10,7 @@ server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 try:
     server.bind(ADDR)
 except Exception:
-    sys.stderr("ERROR")
+    sys.stderr.write("ERROR")
     exit(1)
 
 def readMsg(client, target):
