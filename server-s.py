@@ -23,16 +23,18 @@ def handle_client():
     IP = '0.0.0.0'
     ADDR = (IP, PORT)
     FORMAT = 'utf-8'
-    
+
     connected = True
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-   
+
     try:
         server.bind(ADDR)
     except Exception:
         sys.stderr.write("ERROR:")
         exit(1)
         
+    server.listen(10)
+
     while connected:
         connection, connection_address = server.accept()
         connection.send(bytes('accio\r\n', FORMAT))
@@ -43,5 +45,5 @@ def handle_client():
         total_bytes = total_bytes - confirm_1_bytes + confirm_2_bytes
         connection.close()
         print(total_bytes)
-        
+
 handle_client()
