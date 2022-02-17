@@ -10,7 +10,7 @@ server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 try:
     server.bind(ADDR)
 except Exception:
-    sys.stderr.write("ERROR")
+    sys.stderr.write("ERROR:")
     exit(1)
 
 def readMsg(client, target):
@@ -22,7 +22,7 @@ def readMsg(client, target):
         try:
             msg += connected.recv(2022)
         except Exception:
-            sys.stderr.write("Error : CLIENT WAS TIMED OUT!")
+            sys.stderr.write("ERROR:")
             connected = False
         if msg == target:
             connected = False
