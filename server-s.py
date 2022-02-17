@@ -2,17 +2,6 @@ import socket
 import sys
 import argparse
 
-IP = '0.0.0.0'
-PORT = int(sys.argv[1])
-ADDR = (IP, PORT)
-
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-try:
-    server.bind(ADDR)
-except Exception:
-    sys.stderr.write("ERROR:")
-    exit(1)
-
 def readMsg(client, target):
     connected = True
     client.settimeout(10)
@@ -20,7 +9,7 @@ def readMsg(client, target):
     bytes_read = 0
     while connected:
         try:
-            msg += connected.recv(2022)
+            msg += connected.recv(1024)
         except Exception:
             sys.stderr.write("ERROR:")
             connected = False
@@ -30,9 +19,20 @@ def readMsg(client, target):
     return bytes_read
 
 def handle_client():
-    connected = True
+    PORT = int(sys.argv[1])
+    IP = '0.0.0.0'
+    ADDR = (IP, PORT)
     FORMAT = 'utf-8'
+    
+    connected = True
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+   
+    try:
+        server.bind(ADDR)
+    except Exception:
+        sys.stderr.write("ERROR:")
+        exit(1)
+        
     while connected:
         connection, connection_address = server.accept()
         connection.send(bytes('accio\r\n', FORMAT))
@@ -43,3 +43,5 @@ def handle_client():
         total_bytes = total_bytes - confirm_1_bytes + confirm_2_bytes
         connection.close()
         print(total_bytes)
+        
+handle_client()
