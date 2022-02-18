@@ -40,6 +40,7 @@ def handle_client():
 
     while connected:
         try:
+            signal.signal(signal.SIGINT, exit)
             connection, connection_address = server.accept()
             connection.send(bytes('accio\r\n', FORMAT))
             confirm_1_bytes = readMsg(connection, b'confirm-accio\r\n')
