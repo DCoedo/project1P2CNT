@@ -12,9 +12,9 @@ def readMsg(client, target, confirm):
     while connected:
         try:
             if confirm:
-                msg += client.recv(1024)
+                msg += client.recv(8)
             else:
-                msg = client.recv(1024)
+                msg = client.recv(8)
         except Exception:
             sys.stderr.write("ERROR")
             connected = False
@@ -34,6 +34,7 @@ def handle_client():
     connected = True
     FORMAT = 'utf-8'
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, 2048)
 
     try:
         server.bind(ADDR)
