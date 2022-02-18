@@ -12,14 +12,17 @@ def readMsg(client, target, confirm):
     while connected:
         try:
             if confirm:
-                msg += client.recv(8)
+                msg += client.recv(1024)
             else:
-                msg = client.recv(8)
+                msg = client.recv(1024)
         except Exception:
             sys.stderr.write("ERROR")
             connected = False
         if msg == target:
             connected = False
+        if not confirm:
+            bytes_read += len(msg)
+    if confirm:
         bytes_read += len(msg)
     return bytes_read
 
@@ -46,11 +49,12 @@ def handle_client():
             signal.signal(signal.SIGINT, exit)
             connection, connection_address = server.accept()
             connection.send(bytes('accio\r\n', FORMAT))
-            confirm_1_bytes = read_response(connection, b'confirm-accio\r\n', True)
+            confirm_1_bytes = readMsg(connection, b'confirm-accio\r\n', True)
+            print(confirm_1_bytes)
             connection.send(bytes('accio\r\n', FORMAT))
-            confirm_2_bytes = read_response(connection, b'confirm-accio-again\r\n\r\n', True)
-            all_bytes = read_response(connection, b"", False)
-            all_bytes = all_bytes - confirm_1_bytes + confirm_2_bytes
+            confirm_2_bytes = readMsg(connection, b'confirm-accio-again\r\n\r\n', True)
+            print(confirm_2_bytes)
+            all_bytes = readMsg(connection, b"", False) - confirm_1_bytes + confirm_2_bytes
             connection.close()
             print(all_bytes)
         except Exception:
