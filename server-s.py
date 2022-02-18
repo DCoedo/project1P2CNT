@@ -46,21 +46,18 @@ def handle_client():
     server.listen(10)
 
     while connected:
-        try:
-            signal.signal(signal.SIGINT, exit)
-            connection, connection_address = server.accept()
-            connection.send(bytes('accio\r\n', FORMAT))
-            confirm_1_bytes = readMsg(connection, b'confirm-accio\r\n', True)
-            print(confirm_1_bytes)
-            connection.send(bytes('accio\r\n', FORMAT))
-            confirm_2_bytes = readMsg(connection, b'confirm-accio-again\r\n\r\n', True)
-            print(confirm_2_bytes)
-            all_bytes = readMsg(connection, b"", False) - confirm_1_bytes + confirm_2_bytes
-            connection.close()
-            print(all_bytes)
-        except Exception:
-            sys.stderr.write('ERROR')
-            exit(2)
+        
+        signal.signal(signal.SIGINT, exit)
+        connection, connection_address = server.accept()
+        connection.send(bytes('accio\r\n', FORMAT))
+        confirm_1_bytes = readMsg(connection, b'confirm-accio\r\n', True)
+        print(confirm_1_bytes)
+        connection.send(bytes('accio\r\n', FORMAT))
+        confirm_2_bytes = readMsg(connection, b'confirm-accio-again\r\n\r\n', True)
+        print(confirm_2_bytes)
+        all_bytes = readMsg(connection, b"", False) - confirm_1_bytes + confirm_2_bytes
+        connection.close()
+        print(all_bytes)
 
 
 handle_client()
