@@ -9,7 +9,7 @@ def readMsg(client, target):
     bytes_read = 0
     while connected:
         try:
-            msg = client.recv(1024)
+            msg = connected.recv(1024)
         except Exception:
             sys.stderr.write("ERROR:")
             connected = False
@@ -26,7 +26,7 @@ def handle_client():
 
     connected = True
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    #server.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, 2048)
+    server.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, 2048)
 
     try:
         server.bind(ADDR)
