@@ -26,6 +26,7 @@ def handle_client():
 
     connected = True
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, 2048)
 
     try:
         server.bind(ADDR)
