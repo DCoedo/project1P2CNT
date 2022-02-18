@@ -35,6 +35,7 @@ def handle_client():
         exit(1)
         
     server.listen(10)
+    server.settimeout(10)
 
     while connected:
         connection, connection_address = server.accept()
