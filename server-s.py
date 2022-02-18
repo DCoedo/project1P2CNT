@@ -3,7 +3,7 @@ import signal
 import sys
 import argparse
 
-def readMsg(client, target):
+def readMsg(client, target, confirm):
     connected = True
     client.settimeout(10)
     msg = b""
@@ -58,3 +58,4 @@ def handle_client():
             exit(2)
 
 handle_client()
+
