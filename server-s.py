@@ -56,16 +56,19 @@ def handle_client():
     # print('Real bytes 1: ', len(b'confirm-accio\r\n'))
     # print('Real bytes 2: ', len(b'confirm-accio-again\r\n\r\n'))
     while connected:
-        signal.signal(signal.SIGINT, exit)
-        signal.signal(signal.SIGTERM, exit)
-        connection, connection_address = server.accept()
-        connection.send(bytes('accio\r\n', FORMAT))
-        readConfirm(connection, b'confirm-accio\r\n')
-        connection.send(bytes('accio\r\n', FORMAT))
-        readConfirm(connection, b'confirm-accio-again\r\n\r\n')
-        total_bytes = readMsg(connection)
-        connection.close()
-        print(total_bytes)
-
-
+        try:
+            signal.signal(signal.SIGINT, exit)
+            signal.signal(signal.SIGTERM, exit)
+            connection, connection_address = server.accept()
+            connection.send(bytes('accio\r\n', FORMAT))
+            readConfirm(connection, b'confirm-accio\r\n')
+            connection.send(bytes('accio\r\n', FORMAT))
+            readConfirm(connection, b'confirm-accio-again\r\n\r\n')
+            total_bytes = readMsg(connection)
+            connection.close()
+            print(total_bytes)
+        except Exception():
+            sys.stderr.write('ERROR')
+            exit(2)
+            
 handle_client()
