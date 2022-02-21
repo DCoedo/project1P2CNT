@@ -10,7 +10,7 @@ def readConfirm(client, target):
     msg = b""
     while connected:
         try:
-            msg += client.recv(8)
+            msg += client.recv(1024)
         except Exception:
             sys.stderr.write("ERROR:")
             connected = False
