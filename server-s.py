@@ -25,7 +25,7 @@ def readMsg(client, target):
     bytes_read = 0
     while connected:
         try:
-            msg = client.recv(8)
+            msg = client.recv(1024)
         except Exception:
             sys.stderr.write("ERROR:")
             connected = False
