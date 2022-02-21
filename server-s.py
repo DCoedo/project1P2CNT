@@ -44,7 +44,7 @@ def handle_client():
 
     try:
         server.bind(ADDR)
-    except Exception():
+    except Exception:
         sys.stderr.write("ERROR:")
         exit(1)
 
@@ -66,7 +66,7 @@ def handle_client():
             total_bytes = readMsg(connection)
             connection.close()
             print(total_bytes)
-        except Exception():
+        except Exception:
             sys.stderr.write('ERROR')
             exit(2)
 
