@@ -10,27 +10,27 @@ def readConfirm(client, target):
     msg = b""
     while connected:
         try:
-            msg += client.recv(1024)
-        except Exception:
+            msg += client.recv(8)
+        except socket.timeout:
             sys.stderr.write("ERROR:")
-            connected = False
+            break
         if msg == target:
             connected = False
 
 
-def readMsg(client, target):
+def readMsg(client):
     connected = True
     client.settimeout(10)
-    msg = b""
     bytes_read = 0
     while connected:
+        msg = b''
         try:
-            msg = client.recv(1024)
-        except Exception:
+            msg = client.recv(8)
+        except socket.timeout:
             sys.stderr.write("ERROR:")
-            connected = False
-        if msg == target:
-            connected = False
+            break
+        if len(msg) == 0:
+            break
         bytes_read += len(msg)
     return bytes_read
 
@@ -56,19 +56,16 @@ def handle_client():
     # print('Real bytes 1: ', len(b'confirm-accio\r\n'))
     # print('Real bytes 2: ', len(b'confirm-accio-again\r\n\r\n'))
     while connected:
-        try:
-            signal.signal(signal.SIGINT, exit)
-            connection, connection_address = server.accept()
-            connection.send(bytes('accio\r\n', FORMAT))
-            readConfirm(connection, b'confirm-accio\r\n')
-            connection.send(bytes('accio\r\n', FORMAT))
-            readConfirm(connection, b'confirm-accio-again\r\n\r\n')
-            total_bytes = readMsg(connection, b"")
-            connection.close()
-            print(total_bytes)
-        except Exception:
-            sys.stderr.write("ERROR")
-            exit(2)
+        signal.signal(signal.SIGINT, exit)
+        signal.signal(signal.SIGTERM, exit)
+        connection, connection_address = server.accept()
+        connection.send(bytes('accio\r\n', FORMAT))
+        readConfirm(connection, b'confirm-accio\r\n')
+        connection.send(bytes('accio\r\n', FORMAT))
+        readConfirm(connection, b'confirm-accio-again\r\n\r\n')
+        total_bytes = readMsg(connection)
+        connection.close()
+        print(total_bytes)
 
 
 handle_client()
