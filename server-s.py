@@ -1,7 +1,15 @@
-import socket
-import signal
-import sys
-import argparse
+def readConfirm(client, target):
+    connected = True
+    client.settimeout(10)
+    msg = b""
+    while connected:
+        try:
+            msg += client.recv(8)
+        except Exception:
+            sys.stderr.write("ERROR:")
+            connected = False
+        if msg == target:
+            connected = False
 
 
 def readMsg(client, target):
@@ -11,7 +19,7 @@ def readMsg(client, target):
     bytes_read = 0
     while connected:
         try:
-            msg = client.recv(1024)
+            msg = client.recv(8)
         except Exception:
             sys.stderr.write("ERROR:")
             connected = False
@@ -46,9 +54,9 @@ def handle_client():
             signal.signal(signal.SIGINT, exit)
             connection, connection_address = server.accept()
             connection.send(bytes('accio\r\n', FORMAT))
-            readMsg(connection, b'confirm-accio\r\n')
+            readConfirm(connection, b'confirm-accio\r\n')
             connection.send(bytes('accio\r\n', FORMAT))
-            readMsg(connection, b'confirm-accio-again\r\n\r\n')
+            readConfirm(connection, b'confirm-accio-again\r\n\r\n')
             total_bytes = readMsg(connection, b"")
             connection.close()
             print(total_bytes)
